@@ -132,7 +132,7 @@
 
         function onUpdateClick(gradeId) {
             doPost(
-                '${pageContext.request.contextPath}/grade/toUpdate.action',
+                '${pageContext.request.contextPath}/grade/toUpdate.do',
                 {
                     "id": gradeId
                 }
@@ -147,7 +147,7 @@
 
         function onSureDeleteClick() {
             doPost(
-                '${pageContext.request.contextPath}/grade/delete.action',
+                '${pageContext.request.contextPath}/grade/delete.do',
                 {
                     "id": deleteGradeId
                 }
@@ -156,7 +156,7 @@
 
         function onPageClick(index) {
             doPost(
-                '${pageContext.request.contextPath}/grade/list.action',
+                '${pageContext.request.contextPath}/grade/list.do',
                 {
                     "pageIndex": index
                 }
@@ -568,7 +568,7 @@
 
                 <ul class="submenu">
                     <li class="">
-                        <a href="${pageContext.request.contextPath}/student/list.action">
+                        <a href="${pageContext.request.contextPath}/student/list.do">
                             <i class="menu-icon fa fa-caret-right"></i>
                             学生信息
                         </a>
@@ -577,7 +577,7 @@
                     </li>
 
                     <li class="active">
-                        <a href="${pageContext.request.contextPath}/grade/list.action">
+                        <a href="${pageContext.request.contextPath}/grade/list.do">
                             <i class="menu-icon fa fa-caret-right"></i>
                             班级信息
                         </a>
@@ -586,7 +586,7 @@
                     </li>
 
                     <li class="">
-                        <a href="${pageContext.request.contextPath}/subject/list.action">
+                        <a href="${pageContext.request.contextPath}/subject/list.do">
                             <i class="menu-icon fa fa-caret-right"></i>
                             学科信息
                         </a>
@@ -608,7 +608,7 @@
 
                 <ul class="submenu">
                     <li class="">
-                        <a href="${pageContext.request.contextPath}/student/new.action">
+                        <a href="${pageContext.request.contextPath}/student/new.do">
                             <i class="menu-icon fa fa-caret-right"></i>
                             录入学生
                         </a>
@@ -617,7 +617,7 @@
                     </li>
 
                     <li class="">
-                        <a href="${pageContext.request.contextPath}/grade/new.action">
+                        <a href="${pageContext.request.contextPath}/grade/new.do">
                             <i class="menu-icon fa fa-caret-right"></i>
                             录入班级
                         </a>
@@ -626,7 +626,7 @@
                     </li>
 
                     <li class="">
-                        <a href="${pageContext.request.contextPath}/subject/new.action">
+                        <a href="${pageContext.request.contextPath}/subject/new.do">
                             <i class="menu-icon fa fa-caret-right"></i>
                             录入学科
                         </a>
@@ -780,7 +780,7 @@
                             <div class="col-xs-12">
 
 										<span class="hidden-sm hidden-xs btn-group pull-right">
-											<a href="${pageContext.request.contextPath}/grade/new.action"
+											<a href="${pageContext.request.contextPath}/grade/new.do"
                                                class="btn btn-sm btn-primary">添加</a>
 										</span>
                                 <c:choose>

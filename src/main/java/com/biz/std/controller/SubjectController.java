@@ -49,7 +49,7 @@ public class SubjectController {
         SubjectVo existSubjectVo = subjectService.getSubject(subjectVo.getName());
         if (existSubjectVo == null){
             subjectService.saveSubject(subjectVo);
-            return new ModelAndView("redirect:list.action");
+            return new ModelAndView("redirect:list.do");
         }else{
             ModelAndView modelAndView = new ModelAndView("subject/new");
             SubjectOperateVo subjectOperateVo = new SubjectOperateVo();
@@ -81,7 +81,7 @@ public class SubjectController {
         SubjectVo existSubjectVo = subjectService.getSubject(subjectVo.getName());
         if (existSubjectVo == null){
             subjectService.saveSubject(subjectVo);
-            return new ModelAndView("redirect:list.action");
+            return new ModelAndView("redirect:list.do");
         }else{
             ModelAndView modelAndView = new ModelAndView("subject/update");
             SubjectOperateVo subjectOperateVo = new SubjectOperateVo();
@@ -98,6 +98,6 @@ public class SubjectController {
     @RequestMapping(value = "delete")
     public String delete(SubjectVo subjectVo){
         subjectService.deleteSubject(subjectVo.getId());
-        return "redirect:list.action";
+        return "redirect:list.do";
     }
 }

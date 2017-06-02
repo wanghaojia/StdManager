@@ -19,7 +19,7 @@ public class ScoreVo {
     //学科ID
     private Long subjectId;
 
-    //班级名
+    //学科名
     private String subjectName;
 
     //分数

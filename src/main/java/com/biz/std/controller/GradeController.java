@@ -48,7 +48,7 @@ public class GradeController {
         GradeVo existGradeVo = gradeService.getGrade(gradeVo.getName());
         if (existGradeVo == null){
             gradeService.saveGrade(gradeVo);
-            return new ModelAndView("redirect:list.action");
+            return new ModelAndView("redirect:list.do");
         }else{
             ModelAndView modelAndView = new ModelAndView("grade/new");
             GradeOperateVo gradeOperateVo = new GradeOperateVo();
@@ -80,7 +80,7 @@ public class GradeController {
         GradeVo existGradeVo = gradeService.getGrade(gradeVo.getName());
         if (existGradeVo == null){
             gradeService.saveGrade(gradeVo);
-            return new ModelAndView("redirect:list.action");
+            return new ModelAndView("redirect:list.do");
         }else{
             ModelAndView modelAndView = new ModelAndView("grade/update");
             GradeOperateVo gradeOperateVo = new GradeOperateVo();
@@ -97,7 +97,7 @@ public class GradeController {
     @RequestMapping(value = "delete")
     public String delete(GradeVo gradeVo){
         gradeService.deleteGrade(gradeVo.getId());
-        return "redirect:list.action";
+        return "redirect:list.do";
     }
 
 }

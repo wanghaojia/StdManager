@@ -82,7 +82,7 @@ public class StudentController {
     @RequestMapping(value = "update")
     public String update(StudentVo studentVo) {
         studentService.saveStudent(studentVo);
-        return "redirect:list.action";
+        return "redirect:list.do";
     }
 
     /**
@@ -93,7 +93,7 @@ public class StudentController {
         StudentVo existStudent = studentService.getStudent(studentVo.getId());
         if (existStudent == null){
             studentService.saveStudent(studentVo);
-            return new ModelAndView("redirect:list.action");
+            return new ModelAndView("redirect:list.do");
         }else{
             ModelAndView modelAndView = new ModelAndView("student/new");
             StudentOperateVo studentOperateVo = new StudentOperateVo();
@@ -126,7 +126,7 @@ public class StudentController {
         if (stdSubVo.getScoreVoList() != null){
             studentService.saveStudent(stdSubVo);
         }
-        return "redirect:list.action";
+        return "redirect:list.do";
     }
 
     /**
@@ -146,7 +146,7 @@ public class StudentController {
     @RequestMapping(value = "updateScore")
     public String updateScore(StdSubVo stdSubVo){
         studentService.saveStudent(stdSubVo);
-        return "redirect:list.action";
+        return "redirect:list.do";
     }
 
     /**
@@ -155,7 +155,7 @@ public class StudentController {
     @RequestMapping(value = "delete")
     public String delete(StudentVo studentVo){
         studentService.deleteStudent(studentVo.getId());
-        return "redirect:list.action";
+        return "redirect:list.do";
     }
 
     /**
