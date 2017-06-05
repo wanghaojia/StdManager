@@ -34,8 +34,10 @@
         <property name="url" value="jdbc:mysql://120.24.89.22:3306/stdmanager?characterEncoding=UTF-8"/>
         <property name="username" value="root"/>
         <property name="password" value="123456"/>
-        <!--当连接在7个小时没有向服务器请求的时候，断开此连接-->
-        <property name="maxWait" value="25200"/>
+        <!--每过4小时对连接池进行一次检测，将对象闲置时间超过4小时的对象进行销毁，创建新的对象来取代-->
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="14400"/>
+        <property name="minEvictableIdleTimeMillis" value="14400"/>
     </bean>
 
     <!--配置entityManagerFactory-->
