@@ -12,9 +12,14 @@ public class PageVo {
     private Integer pageIndex;
 
     /**
-     * 页面数据个数（页面大小）
+     * 请求页面数据个数（页面大小）
      */
     private Integer pageSize;
+
+    /**
+     * 实际页面大小
+     */
+    private Integer relPageSize;
 
     /**
      * 总页数
@@ -35,6 +40,14 @@ public class PageVo {
      * 是否还有下一页
      */
     private boolean hasNext;
+
+    public Integer getRelPageSize() {
+        return relPageSize;
+    }
+
+    public void setRelPageSize(Integer relPageSize) {
+        this.relPageSize = relPageSize;
+    }
 
     public Long getTotalElements() {
         return totalElements;

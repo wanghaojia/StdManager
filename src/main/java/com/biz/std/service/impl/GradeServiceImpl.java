@@ -46,7 +46,7 @@ public class GradeServiceImpl implements GradeService {
             }
         },new PageRequest(reqVo.getPageIndex()-1,reqVo.getPageSize()));
         List<GradeVo> gradeVoList = GradeConverter.toVoList(grades.getContent());
-        PageVo pageVo = Utils.getPageVo(grades);
+        PageVo pageVo = Utils.getPageVo(reqVo,grades);
         return new GradeListVo(pageVo,gradeVoList);
     }
 

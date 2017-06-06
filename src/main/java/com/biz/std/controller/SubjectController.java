@@ -1,14 +1,15 @@
 package com.biz.std.controller;
 
-import com.biz.std.model.Subject;
 import com.biz.std.service.SubjectService;
 import com.biz.std.vo.PageReqVo;
 import com.biz.std.vo.subject.SubjectListVo;
 import com.biz.std.vo.subject.SubjectOperateVo;
 import com.biz.std.vo.subject.SubjectVo;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -28,9 +29,16 @@ public class SubjectController {
     @RequestMapping(value = "list")
     public ModelAndView list(PageReqVo reqVo) {
         ModelAndView modelAndView = new ModelAndView("subject/list");
-        SubjectListVo subjectListVo = subjectService.findSubjectList(reqVo);
-        modelAndView.addObject("subjectListVo", subjectListVo);
+//        SubjectListVo subjectListVo = subjectService.findSubjectList(reqVo);
+//        modelAndView.addObject("subjectListVo", subjectListVo);
         return modelAndView;
+    }
+
+    @RequestMapping(value = "listData")
+    @ResponseBody
+    public String listData(PageReqVo reqVo){
+        SubjectListVo subjectListVo = subjectService.findSubjectList(reqVo);
+        return new JSONObject(subjectListVo).toString();
     }
 
     /**

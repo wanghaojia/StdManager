@@ -14,7 +14,7 @@ public class Subject extends BaseEntity{
     /**
      * 学科名
      */
-    @Column(length = 10,nullable = false)
+    @Column(length = 20,nullable = false)
     private String name;
 
 //    /**

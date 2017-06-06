@@ -46,7 +46,7 @@ public class SubjectServiceImpl implements SubjectService {
             }
         },new PageRequest(reqVo.getPageIndex()-1,reqVo.getPageSize()));
         List<SubjectVo> subjectVoList = SubjectConverter.toVoList(subjects.getContent());
-        PageVo pageVo = Utils.getPageVo(subjects);
+        PageVo pageVo = Utils.getPageVo(reqVo,subjects);
         return new SubjectListVo(pageVo,subjectVoList);
     }
     

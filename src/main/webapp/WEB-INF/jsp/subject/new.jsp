@@ -740,7 +740,7 @@
 
                                 <div class="col-sm-9">
                                     <input type="text" id="name" name="name" class="col-xs-10 col-sm-5"
-                                           maxlength="20" required="required"
+                                           required="required" maxlength="20"
                                            value="${(subjectOperateVo != null) ? subjectOperateVo.subjectVo.name : ""}"/>
                                 </div>
                             </div>

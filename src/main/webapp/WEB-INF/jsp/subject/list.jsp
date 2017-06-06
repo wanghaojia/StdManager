@@ -140,30 +140,115 @@
         }
 
 
-        var deleteid;
+        var deleteId;
 
-        function onDeleteClick(subjectId) {
-            deleteid = subjectId;
+        function onDeleteClick(id) {
+            deleteId = id;
         }
 
         function onSureDeleteClick() {
             doPost(
                 '${pageContext.request.contextPath}/subject/delete.do',
                 {
-                    "id": deleteid
+                    "id": deleteId
                 }
             );
         }
 
         function onPageClick(index) {
-            console.log(index);
-            doPost(
-                '${pageContext.request.contextPath}/subject/list.do',
-                {
-                    "pageIndex": index
-                }
-            );
+            var pageSize = $('#simple-table-select_length').val();
+            var dataObj = {
+                pageIndex:index,
+                pageSize:pageSize
+            };
+            listData(dataObj);
         }
+
+
+        function onPageSizeChange(){
+            var pageSize = $('#simple-table-select_length').val();
+            var dataObj = {
+                pageSize:pageSize
+            };
+            listData(dataObj);
+        }
+        function listData(dataObj){
+            $.ajax({
+                type: 'post',
+                dataType:'json',
+                url: '${pageContext.request.contextPath}/subject/listData.do',
+                data:dataObj
+            }).done(function (data) {
+                console.log(data);
+                addTr(data);
+            })
+        }
+
+        function addTr(data){
+            var trHtml = '';
+
+            for(var index = 0; index<data.subjectVoList.length;index++){
+                trHtml += "<tr>";
+                trHtml += '<td>'+(index+1)+'</td>';
+                trHtml += '<td>'+data.subjectVoList[index].name+'</td>';
+                trHtml += '<td>'+data.subjectVoList[index].count+'</td>';
+                trHtml += '<td>'+data.subjectVoList[index].avgScore+'</td>';
+                trHtml += '<td>';
+                trHtml += '<div class="hidden-sm hidden-xs action-buttons">';
+                trHtml += '<a class="green" href="javascript:void(0);" onclick=\"onUpdateClick(';
+                trHtml += data.subjectVoList[index].id;
+                trHtml += '\"> <i class="ace-icon fa fa-pencil bigger-130"></i> </a>';
+                trHtml += '<a class="red" href="#modal-message" role="button" onclick="onDeleteClick(';
+                trHtml += data.subjectVoList[index].id;
+                trHtml += ')" data-toggle="modal"><i class="ace-icon fa fa-trash-o bigger-130"></i> </a></div>';
+                trHtml += '<div class="hidden-md hidden-lg">';
+                trHtml += '<div class="inline pos-rel">';
+                trHtml += '<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">';
+                trHtml += '<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i> </button>';
+                trHtml += '<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">';
+                trHtml += '<li><a href="javascript:void(0);"  onclick="onUpdateClick(';
+                trHtml += data.subjectVoList[index].id;
+                trHtml += ')"class="tooltip-success" data-rel="tooltip" title="" data-original-title="修改">';
+                trHtml += '<span class="green"> <i class="ace-icon fa fa-pencil-square-o bigger-120"></i> </span></a> </li>';
+                trHtml += '<li> <a class="tooltip-error" data-rel="tooltip"title="" href="#modal-message" role="button"onclick="onDeleteClick(';
+                trHtml += data.subjectVoList.id;
+                trHtml += ')" data-toggle="modal" data-original-title="删除">';
+                trHtml += '<span class="red"> <i class="ace-icon fa fa-trash-o bigger-120"></i> </span></a> </li> </ul> </div> </div> </td>';
+                trHtml += "</tr>"
+            }
+
+            $('#tbody').html(trHtml);
+
+            var pageHtml = '';
+
+            if (!data.pageVo.hasPrevious){
+                pageHtml += '<li class="prev disabled"><a>';
+            }else{
+                pageHtml += '<li class="prev"> <a href="javascript:void(0);" onclick="onPageClick(1)">';
+            }
+            pageHtml += '<i class="ace-icon fa fa-angle-double-left"></i> </a> </li>';
+
+            for(var index = 1;index <= data.pageVo.pageCount;index++ ){
+                if (data.pageVo.pageIndex === index){
+                    pageHtml += '<li class="active">';
+                }else{
+                    pageHtml += '<li>';
+                }
+                pageHtml += '<a href="javascript:void(0);" onclick="onPageClick(';
+                pageHtml += index;
+                pageHtml += ')">'+index+'</a></li>';
+            }
+
+            if (!data.pageVo.hasNext){
+                pageHtml += '<li class="next disabled"><a>';
+            }else{
+                pageHtml += '<li class="next"> <a href="javascript:void(0);" onclick="onPageClick('+data.pageVo.pageCount+')">';
+            }
+            pageHtml += '<i class="ace-icon fa fa-angle-double-right"></i> </a> </li>';
+
+            $('#ul-page').html(pageHtml);
+        }
+
     </script>
 
 </head>
@@ -661,16 +746,6 @@
                     </li>
                     <li class="active">学科信息</li>
                 </ul><!-- /.breadcrumb -->
-
-                <div class="nav-search" id="nav-search">
-                    <form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input"
-                                           id="nav-search-input" autocomplete="off">
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-                    </form>
-                </div><!-- /.nav-search -->
             </div>
 
             <div class="page-content">
@@ -691,8 +766,8 @@
                                     </select>
                                     <div class="dropdown dropdown-colorpicker">
                                         <a data-toggle="dropdown"
-                                                                                  class="dropdown-toggle"><span
-                                            class="btn-colorpicker" style="background-color:#438EB9"></span></a>
+                                           class="dropdown-toggle"><span
+                                                class="btn-colorpicker" style="background-color:#438EB9"></span></a>
                                         <ul class="dropdown-menu dropdown-caret">
                                             <li><a class="colorpick-btn selected" style="background-color:#438EB9;"
                                                    data-color="#438EB9"></a></li>
@@ -780,12 +855,31 @@
                         <div class="row">
                             <div class="col-xs-12">
 
-                                        <span class="hidden-sm hidden-xs btn-group pull-right">
-                                            <a href="${pageContext.request.contextPath}/subject/new.do"
-                                               class="btn btn-sm btn-primary">添加</a>
-                                        </span>
-                                <c:choose>
-                                    <c:when test="${subjectListVo.pageVo.pageCount > 0}">
+
+
+                                <span class="hidden-sm hidden-xs btn-group pull-right">
+                                    <a href="${pageContext.request.contextPath}/subject/new.do"
+                                       class="btn btn-sm btn-primary">添加</a>
+                                </span>
+
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="dataTables_length form-inline" id="simple-table_length">
+                                            <label>显示<select id="simple-table-select_length" name="simple-table_length" aria-controls="simple-table"
+                                                             class="form-control input-sm"
+                                                             onchange="onPageSizeChange()"
+                                                        >
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                            </select>条
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <%--<c:choose>--%>
+                                    <%--<c:when test="${subjectListVo.pageVo.pageCount > 0}">--%>
 
                                         <table id="simple-table" class="table table-striped table-bordered table-hover">
                                             <thead>
@@ -798,140 +892,15 @@
                                             </tr>
                                             </thead>
 
-                                            <tbody>
-                                            <c:forEach var="index" begin="0"
-                                                       end="${subjectListVo.subjectVoList.size()-1}" step="1">
-                                                <tr>
-
-                                                    <td>
-                                                        <c:out value="${index+1}"/>
-                                                    </td>
-
-                                                    <td>
-                                                        <c:out value="${subjectListVo.subjectVoList.get(index).name}"/>
-                                                    </td>
-
-                                                    <td>
-                                                        <c:out value="${subjectListVo.subjectVoList.get(index).count}"/>
-                                                    </td>
-
-                                                    <td>
-                                                        <c:out value="${subjectListVo.subjectVoList.get(index).avgScore}"/>
-                                                    </td>
-
-
-                                                    <td>
-                                                        <div class="hidden-sm hidden-xs action-buttons">
-                                                            <a class="green" href="javascript:void(0);"
-                                                               onclick="onUpdateClick(${subjectListVo.subjectVoList.get(index).id})">
-                                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
-                                                            </a>
-
-                                                            <a class="red" href="#modal-message" role="button"
-                                                               onclick="onDeleteClick(${subjectListVo.subjectVoList.get(index).id})"
-                                                               data-toggle="modal">
-                                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="hidden-md hidden-lg">
-                                                            <div class="inline pos-rel">
-                                                                <button class="btn btn-minier btn-yellow dropdown-toggle"
-                                                                        data-toggle="dropdown" data-position="auto">
-                                                                    <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-                                                                </button>
-
-                                                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-
-                                                                    <li>
-                                                                        <a href="javascript:void(0);"
-                                                                           onclick="onUpdateClick(${subjectListVo.subjectVoList.get(index).id})"
-                                                                           class="tooltip-success" data-rel="tooltip"
-                                                                           title="" data-original-title="修改">
-																				<span class="green">
-																					<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																				</span>
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a class="tooltip-error" data-rel="tooltip"
-                                                                           title=""
-                                                                           href="#modal-message" role="button"
-                                                                           onclick="onDeleteClick(${subjectListVo.subjectVoList.get(index).id})"
-                                                                           data-toggle="modal"
-                                                                           data-original-title="删除">
-																				<span class="red">
-																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																				</span>
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-
-                                                </tr>
-
-                                            </c:forEach>
+                                            <tbody id="tbody">
                                             </tbody>
                                         </table>
 
                                         <div class="modal-footer no-margin-top">
 
-                                            <ul class="pagination pull-right no-margin">
-
-                                                <c:choose>
-                                                <c:when test="${!subjectListVo.pageVo.hasPrevious}">
-                                                <li class="prev disabled">
-                                                    <a>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                <li class="prev">
-                                                    <a href="javascript:void(0);" onclick="onPageClick(1)">
-                                                        </c:otherwise>
-                                                        </c:choose>
-                                                        <i class="ace-icon fa fa-angle-double-left"></i>
-                                                    </a>
-                                                </li>
-
-                                                <c:forEach var="index" begin="1" end="${subjectListVo.pageVo.pageCount}"
-                                                           step="1">
-
-                                                    <c:choose>
-                                                        <c:when test="${subjectListVo.pageVo.pageIndex == index}">
-                                                            <li class="active">
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <li>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    <a href="javascript:void(0);"
-                                                       onclick="onPageClick(${index})">${index}</a>
-                                                    </li>
-                                                </c:forEach>
-
-                                                <c:choose>
-                                                <c:when test="${!subjectListVo.pageVo.hasNext}">
-                                                <li class="next disabled">
-                                                    <a href="#">
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                <li class="next">
-                                                    <a href="javascript:void(0);"
-                                                       onclick="onPageClick(${subjectListVo.pageVo.pageCount})">
-                                                        </c:otherwise>
-                                                        </c:choose>
-                                                        <i class="ace-icon fa fa-angle-double-right"></i>
-                                                    </a>
-                                                </li>
+                                            <ul class="pagination pull-right no-margin" id="ul-page">
                                             </ul>
                                         </div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:out value="没有信息，请添加"/>
-                                    </c:otherwise>
-                                </c:choose>
 
                             </div><!-- /.span -->
                         </div><!-- /.row -->
@@ -1041,6 +1010,9 @@
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
     jQuery(function ($) {
+
+        onPageSizeChange();
+
         //initiate dataTables plugin
         var myTable =
             $('#dynamic-table')
@@ -1125,7 +1097,6 @@
             defaultCopyAction(e, dt, button, config);
             $('.dt-button-info').addClass('gritter-item-wrapper gritter-info gritter-center white');
         });
-
 
         var defaultColvisAction = myTable.button(0).action();
         myTable.button(0).action(function (e, dt, button, config) {

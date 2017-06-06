@@ -162,6 +162,91 @@
                 }
             );
         }
+
+
+        function onPageSizeChange(){
+            var pageSize = $('#simple-table-select_length').val();
+            var dataObj = {
+                pageSize:pageSize
+            };
+            listData(dataObj);
+        }
+        function listData(dataObj){
+            $.ajax({
+                type: 'post',
+                dataType:'json',
+                url: '${pageContext.request.contextPath}/subject/listData.do',
+                data:dataObj
+            }).done(function (data) {
+                console.log(data);
+                addTr(data);
+            })
+        }
+
+        function addTr(data){
+            var trHtml = '';
+
+            for(var index = 0; index<data.subjectVoList.length;index++){
+                trHtml += "<tr>";
+                trHtml += '<td>'+(index+1)+'</td>';
+                trHtml += '<td>'+data.subjectVoList[index].name+'</td>';
+                trHtml += '<td>'+data.subjectVoList[index].count+'</td>';
+                trHtml += '<td>'+data.subjectVoList[index].avgScore+'</td>';
+                trHtml += '<td>';
+                trHtml += '<div class="hidden-sm hidden-xs action-buttons">';
+                trHtml += '<a class="green" href="javascript:void(0);" onclick=\"onUpdateClick(';
+                trHtml += data.subjectVoList[index].id;
+                trHtml += '\"> <i class="ace-icon fa fa-pencil bigger-130"></i> </a>';
+                trHtml += '<a class="red" href="#modal-message" role="button" onclick="onDeleteClick(';
+                trHtml += data.subjectVoList[index].id;
+                trHtml += ')" data-toggle="modal"><i class="ace-icon fa fa-trash-o bigger-130"></i> </a></div>';
+                trHtml += '<div class="hidden-md hidden-lg">';
+                trHtml += '<div class="inline pos-rel">';
+                trHtml += '<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">';
+                trHtml += '<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i> </button>';
+                trHtml += '<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">';
+                trHtml += '<li><a href="javascript:void(0);"  onclick="onUpdateClick(';
+                trHtml += data.subjectVoList[index].id;
+                trHtml += ')"class="tooltip-success" data-rel="tooltip" title="" data-original-title="修改">';
+                trHtml += '<span class="green"> <i class="ace-icon fa fa-pencil-square-o bigger-120"></i> </span></a> </li>';
+                trHtml += '<li> <a class="tooltip-error" data-rel="tooltip"title="" href="#modal-message" role="button"onclick="onDeleteClick(';
+                trHtml += data.subjectVoList.id;
+                trHtml += ')" data-toggle="modal" data-original-title="删除">';
+                trHtml += '<span class="red"> <i class="ace-icon fa fa-trash-o bigger-120"></i> </span></a> </li> </ul> </div> </div> </td>';
+                trHtml += "</tr>"
+            }
+
+            $('#tbody').html(trHtml);
+
+            var pageHtml = '';
+
+            if (!data.pageVo.hasPrevious){
+                pageHtml += '<li class="prev disabled"><a>';
+            }else{
+                pageHtml += '<li class="prev"> <a href="javascript:void(0);" onclick="onPageClick(1)">';
+            }
+            pageHtml += '<i class="ace-icon fa fa-angle-double-left"></i> </a> </li>';
+
+            for(var index = 1;index <= data.pageVo.pageCount;index++ ){
+                if (data.pageVo.pageIndex === index){
+                    pageHtml += '<li class="active">';
+                }else{
+                    pageHtml += '<li>';
+                }
+                pageHtml += '<a href="javascript:void(0);" onclick="onPageClick(';
+                pageHtml += index;
+                pageHtml += ')">'+index+'</a></li>';
+            }
+
+            if (!data.pageVo.hasNext){
+                pageHtml += '<li class="next disabled"><a>';
+            }else{
+                pageHtml += '<li class="next"> <a href="javascript:void(0);" onclick="onPageClick('+data.pageVo.pageCount+')">';
+            }
+            pageHtml += '<i class="ace-icon fa fa-angle-double-right"></i> </a> </li>';
+
+            $('#ul-page').html(pageHtml);
+        }
     </script>
 
 </head>
